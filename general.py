@@ -18,7 +18,7 @@ app_key_dict = "a224b789697d483b87f2517f8e08b10b"
 
 flag = 0
 queri = index()
-weather_list = ["climate", "weather", "forecast"]
+weather_list = ["climate", "weather", "forecast", "temperature"]
 dictionary_list = ["define", "meaning", "means"]
 run = 0
 temp_word = ""
@@ -43,13 +43,20 @@ def api_calls(tag_query, flag_2):
                 print("code{}\n".format(r.status_code))
                 # print(r.text)
                 ans = json_object['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]
-                print(word, " : " + ans)
+                print(wrd, " : " + ans)
 
             if flag_2 == 1:  # check here
-                temp_word = tag_query[-2][0]
-                print("meaning iski nikalooio:", temp_word)
-                weather_api(temp_word)
-                break
+                # print(tag_query[-1][1])
+                if tag_query[-1][1] != '.':
+                    temp_word = tag_query[-1][0]
+                    print("meaning iski nikalooio:", temp_word)
+                    weather_api(temp_word)
+                    break
+                else:
+                    temp_word = tag_query[-2][0]
+                    print("meaning iski nikalosbhcbisb:", temp_word)
+                    weather_api(temp_word)
+                    break
             elif flag_2 == 2:
                 temp_word = tag_query[0][0]
                 print("meaning iski nikalo:", temp_word)
@@ -58,7 +65,7 @@ def api_calls(tag_query, flag_2):
 
         elif word in weather_list:
             for word_i, tag_j in tag_query:
-                if tag_j == 'NNP':
+                if tag_j == 'NNP' and word_i != 'Jarvis':
                     print(word_i)
                     r = requests.get(
                         "http://api.openweathermap.org/data/2.5/weather?q=" + word_i + "&appid=" + api_key_weather)
